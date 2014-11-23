@@ -202,6 +202,14 @@ var area = new L.esri.Routing.DriveArea().origin(latlng).distance(5).distance(10
 
 @TODO
 
+### Fleet Routing (Vehicle Routing Problem)
+
+@TODO
+
+## Traffic Layer
+
+@TODO
+
 ## Open Questions
 
 * Could we do something more interesting with the traffic layer? Automatic popups? Custom icons? Expose individual traffic layers/incidents with `L.esri.FeatureLayer`?
