@@ -178,7 +178,10 @@ var area = new L.esri.Routing.DriveArea().origin(latlng).distance(5).barrier(geo
 **Styling**
 
 ```js
-var area = new L.esri.Routing.DriveArea().origin(latlng).distance(5).barrier(geojson).addTo(map);
+var area = new L.esri.Routing.DriveArea({
+    style: stylingFunction, // path options or function
+    barrierStyle: stylingFunction // path options or function
+}).origin(latlng).distance(5).barrier(geojson).addTo(map);
 ```
 
 **Access Raw Polygons**
