@@ -2,7 +2,7 @@
 
 The Esri Leaflet Geocoder is a small series of API helpers and UI controls to interact with the ArcGIS Online routing and directions services.
 
-**Currently Esri Leaflet Routing is in the design stage. Please feel free to propose new ideas or implimentation in the [issues](/issues)**
+**Currently Esri Leaflet Routing is in the design stage. Please feel free to propose new ideas or implementation in the [issues](https://github.com/Esri/esri-leaflet-routing/issues)**
 
 ## Proposed Capibilities
 
@@ -13,29 +13,29 @@ Esri Leaflet Routing should launch with support for the following routing featur
 * Sync http://resources.arcgis.com/en/help/arcgis-rest-api/#/Route_service_with_synchronous_execution/02r300000036000000/
 * Async http://resources.arcgis.com/en/help/arcgis-rest-api/#/Route_service_with_asynchronous_execution/02r300000275000000/
 
-Ideally Esri Leaflet would handle switching between the 2 modes automatically once a certain number of features is reached. It should also fully support optimizing the route by changing the order of the stops and support all the features in teh `stops` array like TimeWindows, CurbApproches and named routes, drive/walk and barriers
+Ideally Esri Leaflet would handle switching between the 2 modes automatically once a certain number of features are reached. It should also fully support optimizing the route by changing the order of the stops and support all the features in the `stops` array like TimeWindows, CurbApproches and named routes, drive/walk and barriers
 
 ### Closest Facility
 
 * Sync http://resources.arcgis.com/en/help/arcgis-rest-api/#/Closest_Facility_service_with_synchronous_execution/02r3000000n7000000/
 * Async http://resources.arcgis.com/en/help/arcgis-rest-api/#/Closest_Facility_service_with_asynchronous_execution/02r30000020n000000/
 
-Ideally Esri Leaflet would handle switching between the 2 modes automatically once a certain number of features is reached. Esri Leaflet Routing should also support all the input types for facilities as well as all options availavle on the REST APIs
+Ideally Esri Leaflet would handle switching between the 2 modes automatically once a certain number of features are reached. Esri Leaflet Routing should also support all the input types for facilities as well as all options available on the REST APIs
 
 ### Drive Times (Service Area)
 
 * http://resources.arcgis.com/en/help/arcgis-rest-api/#/Service_Area_service_with_synchronous_execution/02r3000000n2000000/
 * http://resources.arcgis.com/en/help/arcgis-rest-api/#/Service_Area_service_with_asynchronous_execution/02r3000000n0000000/
 
-Ideally Esri Leaflet would handle switching between the 2 modes automatically once a certain number of features is reached. Should support all features like barriers, ect...
+Ideally Esri Leaflet would handle switching between the 2 modes automatically once a certain number of features are reached. Should support all features like barriers, ect...
 
 ### Fleet Routing (Vehicle Routing Problem)
 
 * http://resources.arcgis.com/en/help/arcgis-rest-api/#/Vehicle_Routing_Problem_service/02r3000000n4000000/
 
-Quite possibly Esris largest and most complex API. This optimized large fleets of vehicles across multupile desitionataion and can handle things like cargo volumes, ect.
+Quite possibly Esri's largest and most complex API. This optimizes large fleets of vehicles across multiple destinations and can handle restrictions such as cargo volumes, turn restrictions, operating costs, etc.
 
-Probally best to leave this off an inital version for to save some sanity.
+Probably best to support this in later versions of the library.
 
 ### Traffic Layer
 
@@ -155,7 +155,7 @@ myRoute.on('routeclick', function(e){
 
 ## Service Areas
 
-divide into 2 classes to seperate walking/driving.breaks are defined with either `distance(meters)` or time(minutes) and can be chained.
+divide into 2 classes to separate walking/driving. Breaks are defined with either `distance(meters)` or time(minutes) and can be chained.
 
 **WalkArea**
 
@@ -200,14 +200,14 @@ var area = new L.esri.Routing.DriveArea().origin(latlng).distance(5).distance(10
 
 ## Closest Facility
 
-To Simplify the closest facility API we can optimize out API wrapper to `origin()` (incidents) and `destination` (facilities) and always use the `esriNATravelDirectionToFacility` which will route from the origins (incidents) to destinations (facilities). This still covers the following use cases...
+To simplify the closest facility API we can optimize our API wrapper to `origin()` (incidents) and `destination` (facilities) and always use the `esriNATravelDirectionToFacility` which will route from the origins (incidents) to destinations (facilities). This still covers the following use cases...
 
 * Route closest ambulence from dispatch to accident - 3 origins (dispatch) 1 destination (accident)
 * Route ambulence from accident to closest hospital - 1 origin (accident) X destinations (hospitals)
 
-The benifit to this approch fixes some confusion in the API were its hard to figure out what is a facility and what is an incident, e.g. should I make my accident an incident or a facility? should i set the travel direction to or from facilities? what if my facility isnt a place?
+The benifit to this approch fixes some confusion in the API were it's hard to figure out what is a facility and what is an incident. For example should I make my accident an incident or a facility? Should i set the travel direction to or from facilities? What if my facility isnt a place?
 
-This also avoids confusion becuase depending on travel direction params like `Cutoff_WalkTime` can be declared on either the incidents or facilities. We only have to do this once.
+This also avoids confusion becuase depending on travel direction parameters like `Cutoff_WalkTime` can be declared on either the incidents or facilities. We only have to do this once.
 
 **Simple**
 
@@ -277,5 +277,5 @@ var route = new L.esri.routing.ClosestFacility({
 ## Open Questions
 
 * Could we do something more interesting with the traffic layer? Automatic popups? Custom icons? Expose individual traffic layers/incidents with `L.esri.FeatureLayer`?
-* How much/little should we stray from the REST APIs and or existing implimentations? This was pretty hotly debated in https://github.com/Esri/esri-leaflet/issues/232 and also over what to call the `where` param in `Query`.
+* How much/little should we stray from the REST APIs and or existing implementations? This was pretty hotly debated in https://github.com/Esri/esri-leaflet/issues/232 and also what to call the `where` param in `Query`.
 * Should this api also have live updates? For example if you add a route to a map should you be able to add stops later with `stop()` and have it automatically update? This might be tough from a event handler standpoint because we would have to copy events from the old routes to the new routes but it could be doable.
