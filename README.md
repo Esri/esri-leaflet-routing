@@ -200,7 +200,71 @@ var area = new L.esri.Routing.DriveArea().origin(latlng).distance(5).distance(10
 
 ## Closest Facility
 
-@TODO
+To Simplify the closest facility API we can optimize out API wrapper to `origin()` (incidents) and `destination` (facilities) and always use the `esriNATravelDirectionToFacility` which will route from the origins (incidents) to destinations (facilities). This still covers the following use cases...
+
+* Route closest ambulence from dispatch to accident - 3 origins (dispatch) 1 destination (accident)
+* Route ambulence from accident to closest hospital - 1 origin (accident) X destinations (hospitals)
+
+The benifit to this approch fixes some confusion in the API were its hard to figure out what is a facility and what is an incident, e.g. should I make my accident an incident or a facility? should i set the travel direction to or from facilities? what if my facility isnt a place?
+
+This also avoids confusion becuase depending on travel direction params like `Cutoff_WalkTime` can be declared on either the incidents or facilities. We only have to do this once.
+
+**Simple**
+
+```js
+new L.esri.Routing.ClosestFacility().origin(latlng).destination(latlng).destinstaion(latlng).addTo(map);
+```
+
+**Names and Options**
+
+```js
+var hospital1 = new L.esri.routing.Destination(latlng, 'Hospital 1').allowUTurn(false);
+var hospital2 = new L.esri.routing.Destination(latlng, 'Hospital 2').allowUTurn(false);
+var hospital3 = new L.esri.routing.Destination(latlng, 'Hospital 3').allowUTurn(false);
+var accident = new L.esri.routing.Origin('Accident').closest(2).maxTravelTime(60); // choose the 2 closest destinations but ignore destinations that will take over 60 minutes to get to
+
+var route = new L.esri.routing.ClosestFacility().origin(Accident).destination(hospital1).destination(hospital2).destination(hospital2).addTo(map);
+```
+
+**Feature Layer as Destination**
+
+```js
+var hospitals = L.esri.Tasks.Query(featureLayerURL).where('hasEmergencyRoom=1');
+var accident = new L.esri.routing.Origin('Accident').closest(2).maxTravelTime(60); // choose the 2 closest destinations but ignore destinations that will take over 60 minutes to get to
+
+var route = new L.esri.routing.ClosestFacility().origin(Accident).destination(hospitals).addTo(map);
+```
+
+**Options**
+
+```js
+var hospitals = L.esri.Tasks.Query(featureLayerURL).where('hasEmergencyRoom=1');
+var accident = new L.esri.routing.Origin('Accident').closest(2).maxTravelTime(60); // choose the 2 closest destinations but ignore destinations that will take over 60 minutes to get to
+
+var route = new L.esri.routing.ClosestFacility({
+    route: stylingFunction, // path options or function
+    barrierStyle: stylingFunction, // path options or function
+    markerStyle: layerFunction // called for each origin/destination to place it ont he map
+}).origin(Accident).destination(hospitals).addTo(map);
+```
+
+**Barriers**
+
+```js
+var marathonRoute = {
+    type: 'Polygon',
+    coordinates: [...]
+}
+
+var hospitals = L.esri.Tasks.Query(featureLayerURL).where('hasEmergencyRoom=1');
+var accident = new L.esri.routing.Origin('Accident').closest(2).maxTravelTime(60); // choose the 2 closest destinations but ignore destinations that will take over 60 minutes to get to
+
+var route = new L.esri.routing.ClosestFacility({
+    route: stylingFunction, // path options or function
+    barrierStyle: stylingFunction, // path options or function
+    markerStyle: layerFunction // called for each origin/destination to place it ont he map
+}).origin(Accident).destination(hospitals).barrier(marathonRoute).addTo(map);
+```
 
 ### Fleet Routing (Vehicle Routing Problem)
 
