@@ -4,34 +4,41 @@ The Esri Leaflet Geocoder is a small series of API helpers and UI controls to in
 
 **Currently Esri Leaflet Routing is in the design stage. Please feel free to propose new ideas or implementation in the [issues](https://github.com/Esri/esri-leaflet-routing/issues)**
 
-## Proposed Capibilities
+## Proposed Capabilities
 
 Esri Leaflet Routing should launch with support for the following routing features:
 
 ### Routing 
 
-* Sync http://resources.arcgis.com/en/help/arcgis-rest-api/#/Route_service_with_synchronous_execution/02r300000036000000/
-* Async http://resources.arcgis.com/en/help/arcgis-rest-api/#/Route_service_with_asynchronous_execution/02r300000275000000/
+http://resources.arcgis.com/en/help/arcgis-rest-api/#/Route_service_with_synchronous_execution/02r300000036000000/
 
-Ideally Esri Leaflet would handle switching between the 2 modes automatically once a certain number of features is reached. It should also fully support optimizing the route by changing the order of the stops and support all the features in the `stops` array like TimeWindows, CurbApproches and named routes, drive/walk and barriers
+* L.esri.Routing.Route - Build a route
+* L.esri.Routing.Stop - Represents a stop in the route
+* L.esri.Routing.Barrier - Represents a barrier that prohibits or slows travel
+* L.esri.Routing.TravelMode - Represents a set of restrictions to place on travel
 
 ### Closest Facility
 
-* Sync http://resources.arcgis.com/en/help/arcgis-rest-api/#/Closest_Facility_service_with_synchronous_execution/02r3000000n7000000/
-* Async http://resources.arcgis.com/en/help/arcgis-rest-api/#/Closest_Facility_service_with_asynchronous_execution/02r30000020n000000/
+http://resources.arcgis.com/en/help/arcgis-rest-api/#/Closest_Facility_service_with_synchronous_execution/02r3000000n7000000/
 
-Ideally Esri Leaflet would handle switching between the 2 modes automatically once a certain number of features are reached. Esri Leaflet Routing should also support all the input types for facilities as well as all options available on the REST APIs
+* `L.esri.Routing.Route` - Build a route
+* `L.esri.Routing.Origin` - Represents places to route from
+* `L.esri.Routing.Destination` - Represents places to route to
+* `L.esri.Routing.Barrier` - Represents a barrier that prohibits or slows travel
+* `L.esri.Routing.TravelMode` - Represents a set of restrictions to place on travel
 
 ### Drive Times (Service Area)
 
-* http://resources.arcgis.com/en/help/arcgis-rest-api/#/Service_Area_service_with_synchronous_execution/02r3000000n2000000/
-* http://resources.arcgis.com/en/help/arcgis-rest-api/#/Service_Area_service_with_asynchronous_execution/02r3000000n0000000/
+http://resources.arcgis.com/en/help/arcgis-rest-api/#/Service_Area_service_with_synchronous_execution/02r3000000n2000000/
 
-Ideally Esri Leaflet would handle switching between the 2 modes automatically once a certain number of features are reached. Should support all features like barriers, ect...
+* `L.esri.Routing.Route` - Build a route
+* `L.esri.Routing.Place` - Represents places to start routing from
+* `L.esri.Routing.Barrier` - Represents a barrier that prohibits or slows travel
+* `L.esri.Routing.TravelMode` - Represents a set of restrictions to place on travel
 
 ### Fleet Routing (Vehicle Routing Problem)
 
-* http://resources.arcgis.com/en/help/arcgis-rest-api/#/Vehicle_Routing_Problem_service/02r3000000n4000000/
+http://resources.arcgis.com/en/help/arcgis-rest-api/#/Vehicle_Routing_Problem_service/02r3000000n4000000/
 
 Quite possibly Esri's largest and most complex API. This optimizes large fleets of vehicles across multiple destinations and can handle restrictions such as cargo volumes, turn restrictions, operating costs, etc.
 
@@ -43,6 +50,8 @@ Probably best to support this in later versions of the library.
 
 The traffic layer would really just be an instance of `L.esri.DynamicMapLayer` with a predefined URL.
 
+Probably best to support this in later versions of the library and show consuming it in examples.
+
 ## Proposed API
 
 ### Routing
@@ -51,116 +60,11 @@ See [L.esri.Routing.Route](Route.md)...
 
 ## Service Areas
 
-divide into 2 classes to separate walking/driving. Breaks are defined with either `distance(meters)` or time(minutes) and can be chained.
-
-**WalkArea**
-
-```js
-var area = new L.esri.Routing.WalkArea().origin(latlng).distance(5).distance(10).distance(15).addTo(map);
-```
-
-**DriveArea**
-
-```js
-var area = new L.esri.Routing.DriveArea().origin(latlng).distance(5).distance(10).distance(15).addTo(map);
-```
-
-**Barriers**
-
-```js
-var area = new L.esri.Routing.DriveArea().origin(latlng).distance(5).barrier(geojson).addTo(map);
-```
-
-**Styling**
-
-```js
-var area = new L.esri.Routing.DriveArea({
-    style: stylingFunction, // path options or function
-    barrierStyle: stylingFunction // path options or function
-}).origin(latlng).distance(5).barrier(geojson).addTo(map);
-```
-
-**Access Raw Polygons**
-
-```js
-var area = new L.esri.Routing.DriveArea().origin(latlng).distance(5).distance(10).run(function(error, areas, barriers){
-    // console.log(do stuff)
-});
-```
-
-```js
-var area = new L.esri.Routing.DriveArea().origin(latlng).distance(5).distance(10).run(function(error, areas, barriers){
-    // console.log(do stuff)
-});
-```
+See [L.esri.Routing.TravelArea](TravelArea.md)...
 
 ## Closest Facility
 
-To simplify the closest facility API we can optimize our API wrapper to `origin()` (incidents) and `destination` (facilities) and always use the `esriNATravelDirectionToFacility` which will route from the origins (incidents) to destinations (facilities). This still covers the following use cases...
-
-* Route closest ambulence from dispatch to accident - 3 origins (dispatch) 1 destination (accident)
-* Route ambulence from accident to closest hospital - 1 origin (accident) X destinations (hospitals)
-
-The benifit to this approch fixes some confusion in the API were it's hard to figure out what is a facility and what is an incident. For example should I make my accident an incident or a facility? Should i set the travel direction to or from facilities? What if my facility isnt a place?
-
-This also avoids confusion becuase depending on travel direction parameters like `Cutoff_WalkTime` can be declared on either the incidents or facilities. We only have to do this once.
-
-**Simple**
-
-```js
-new L.esri.Routing.ClosestFacility().origin(latlng).destination(latlng).destinstaion(latlng).addTo(map);
-```
-
-**Names and Options**
-
-```js
-var hospital1 = new L.esri.routing.Destination(latlng, 'Hospital 1').allowUTurn(false);
-var hospital2 = new L.esri.routing.Destination(latlng, 'Hospital 2').allowUTurn(false);
-var hospital3 = new L.esri.routing.Destination(latlng, 'Hospital 3').allowUTurn(false);
-var accident = new L.esri.routing.Origin('Accident').closest(2).maxTravelTime(60); // choose the 2 closest destinations but ignore destinations that will take over 60 minutes to get to
-
-var route = new L.esri.routing.ClosestFacility().origin(Accident).destination(hospital1).destination(hospital2).destination(hospital2).addTo(map);
-```
-
-**Feature Layer as Destination**
-
-```js
-var hospitals = L.esri.Tasks.Query(featureLayerURL).where('hasEmergencyRoom=1');
-var accident = new L.esri.routing.Origin('Accident').closest(2).maxTravelTime(60); // choose the 2 closest destinations but ignore destinations that will take over 60 minutes to get to
-
-var route = new L.esri.routing.ClosestFacility().origin(Accident).destination(hospitals).addTo(map);
-```
-
-**Options**
-
-```js
-var hospitals = L.esri.Tasks.Query(featureLayerURL).where('hasEmergencyRoom=1');
-var accident = new L.esri.routing.Origin('Accident').closest(2).maxTravelTime(60); // choose the 2 closest destinations but ignore destinations that will take over 60 minutes to get to
-
-var route = new L.esri.routing.ClosestFacility({
-    route: stylingFunction, // path options or function
-    barrierStyle: stylingFunction, // path options or function
-    markerStyle: layerFunction // called for each origin/destination to place it ont he map
-}).origin(Accident).destination(hospitals).addTo(map);
-```
-
-**Barriers**
-
-```js
-var marathonRoute = {
-    type: 'Polygon',
-    coordinates: [...]
-}
-
-var hospitals = L.esri.Tasks.Query(featureLayerURL).where('hasEmergencyRoom=1');
-var accident = new L.esri.routing.Origin('Accident').closest(2).maxTravelTime(60); // choose the 2 closest destinations but ignore destinations that will take over 60 minutes to get to
-
-var route = new L.esri.routing.ClosestFacility({
-    route: stylingFunction, // path options or function
-    barrierStyle: stylingFunction, // path options or function
-    markerStyle: layerFunction // called for each origin/destination to place it ont he map
-}).origin(Accident).destination(hospitals).barrier(marathonRoute).addTo(map);
-```
+See [L.esri.Routing.ClosestDestination](Closest.md)...
 
 ### Fleet Routing (Vehicle Routing Problem)
 
@@ -173,5 +77,3 @@ var route = new L.esri.routing.ClosestFacility({
 ## Open Questions
 
 * Could we do something more interesting with the traffic layer? Automatic popups? Custom icons? Expose individual traffic layers/incidents with `L.esri.FeatureLayer`?
-* How much/little should we stray from the REST APIs and or existing implementations? This was pretty hotly debated in https://github.com/Esri/esri-leaflet/issues/232 and also what to call the `where` param in `Query`.
-* Should this api also have live updates? For example if you add a route to a map should you be able to add stops later with `stop()` and have it automatically update? This might be tough from a event handler standpoint because we would have to copy events from the old routes to the new routes but it could be doable.
