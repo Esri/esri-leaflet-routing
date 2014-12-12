@@ -1,6 +1,6 @@
 # Esri Leaflet Routing
 
-The Esri Leaflet Geocoder is a small series of API helpers and UI controls to interact with the ArcGIS Online routing and directions services.
+The Esri Leaflet Routing is a small series of API helpers and UI controls to interact with the ArcGIS Online routing and directions services.
 
 **Currently Esri Leaflet Routing is in the design stage. Please feel free to propose new ideas or implementation in the [issues](https://github.com/Esri/esri-leaflet-routing/issues)**
 
@@ -8,7 +8,7 @@ The Esri Leaflet Geocoder is a small series of API helpers and UI controls to in
 
 Esri Leaflet Routing should launch with support for the following routing features:
 
-### Routing 
+### Routing
 
 http://resources.arcgis.com/en/help/arcgis-rest-api/#/Route_service_with_synchronous_execution/02r300000036000000/
 
