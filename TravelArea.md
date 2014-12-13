@@ -25,12 +25,12 @@ var area = new L.esri.Routing.DriveArea({
 
 ```js
 var area = new L.esri.Routing.DriveArea().origin(latlng).distance(5).distance(10).run(function(error, areas, barriers){
-    // console.log(do stuff)
+    // console.log(do stuff);
 });
 ```
 
 ```js
 var area = new L.esri.Routing.DriveArea().origin(latlng).distance(5).distance(10).run(function(error, areas, barriers){
-    // console.log(do stuff)
+    // console.log(do stuff);
 });
 ```

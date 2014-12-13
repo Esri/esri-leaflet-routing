@@ -1,6 +1,6 @@
 # L.esri.Routing.Route
 
-`L.esri.Routing.Route` is a class that is responsible for getting the route between a number fo `L.esri.Routing.Stop` objects (or simple latlngs).
+`L.esri.Routing.Route` is a class that is responsible for solving routes between any number of `L.esri.Routing.Stop` objects (or simple latlngs).
 
 ## A Basic Route
 
@@ -17,10 +17,10 @@ var route = new L.esri.Routing.Route().start(latlng).end(latlng).addTo(map);
 
 ## Named Stops (`L.esri.Routing.Stop`)
 
-A distinct objects respresenting a stop in a route is important for a number of reasons. 
+A distinct object respresenting a stop in a route.  This is important for a number of reasons.
 
 * Stops can be added to the map
-* Bind popups on stops
+* Bind popups to stops
 * Wrapping of advanced parameters like U-Turns and curb approaches
 * Update stops later by passing the same name.
 * Bind events to stops.
@@ -41,11 +41,11 @@ var work = new L.esri.Routing.Stop(latlng, {
 var route = new L.esri.Routing.Route().start(home).stop(caffeine).end(work).addTo(map);
 ```
 
-`L.esri.Routing.Stop` will extend `L.Marker` background for this decision is in https://github.com/Esri/esri-leaflet-routing/issues/11
+`L.esri.Routing.Stop` will extend `L.Marker`.  Background for this decision can be found [here](https://github.com/Esri/esri-leaflet-routing/issues/11)
 
 ## Optimizing Routes
 
-The semantics for route optimization have been discussed in https://github.com/Esri/esri-leaflet-routing/issues/8 the tables from @nixta represent how this will work, with the exception being slightly different method/option names.
+The semantics for route optimization have been discussed [here](https://github.com/Esri/esri-leaflet-routing/issues/8). The tables from [@nixta](https://github.com/nixta) represent how this will work, with the exception of using slightly different method/option names.
 
 ```js
 var work = new L.esri.Routing.Stop(latlng, {
@@ -115,7 +115,7 @@ var route.bindPopup(function(e){
 ```js
 var route = new L.esri.Routing.Route().stops([latlng,latlng]).addTo(map);
 
-// when the route is loaded a directions property will be set on it
+// when the route is loaded a directions property will be included in the response object
 route.on('load', function(e){
     e.target.directions
 });
@@ -158,7 +158,7 @@ var route = new L.esri.Routing.Route().stops([latlng,latlng]).run(function(error
 Full list of options to pass when creating `L.esri.Routing.Route`
 
 * `travelMode` - One of `DrivingTime`, `DrivingDistance`, `TruckingTime`, `TruckingDistance`, `WalkingTime`, `WalkingDistance` OR a `L.esri.Routing.TravelMode` object.
-* `useTraffic` - `true` or `false` - 
+* `useTraffic` - `true` or `false` -
 * `startTime` - Date object, if set overrides `travelMode` to be `Time` and useTraffic to be `true`.
 * `optimizeStopOrder` - `false` or `true` optimize the order of the stops (via `findBestSequence`) also controls behavior for `preserveFirstStop` and `preserveLastStop`
 * `language`: Any valid string from the directions service
@@ -171,8 +171,8 @@ Full list of options to pass when creating `L.esri.Routing.Route`
 * `end()` - define teh ending point of the route. Accepts a `L.esri.Routing.Stop` or `LatLng` with an optional name
 * `stop()` - defines a single stop along the route. Accepts a `L.esri.Routing.Stop` or `LatLng` with an optional name,
 * `stops()` - defines an array of stops along the route. Accepts a `L.esri.Routing.Stop` or `LatLng` with an optional name, will probably also be able to accept an L.esri.Tasks.Query for pulling stops from a service.
-* `barrier()` - Still being debated https://github.com/Esri/esri-leaflet-routing/issues/12, will probably also be able to accept an L.esri.Tasks.Query for pulling stops from a service.
-* `barriers()` - Still being debated https://github.com/Esri/esri-leaflet-routing/issues/12, will probably also be able to accept an L.esri.Tasks.Query for pulling stops from a service.
+* `barrier()` - Still being debated [here](https://github.com/Esri/esri-leaflet-routing/issues/12), will probably also be able to accept an L.esri.Tasks.Query for pulling stops from a service.
+* `barriers()` - Still being debated [here](https://github.com/Esri/esri-leaflet-routing/issues/12), will probably also be able to accept an L.esri.Tasks.Query for pulling stops from a service.
 * `addTo()` - Add the route to the map
 * `removeFrom()` - Removes the route from the map
 * `run()` - executes the requests and runs a callback
@@ -198,7 +198,7 @@ Full list of options to pass when creating `L.esri.Routing.Route`
 
 ### Options
 
-* `Name` - sets the name on the stop will be used in directions.
+* `Name` - sets the name on the stop.  This will be used in directions.
 
 ### Methods
 
@@ -207,5 +207,5 @@ Full list of options to pass when creating `L.esri.Routing.Route`
 * `addTravelDistance(distance)` - unit and type of distance (walking, trucking, driving) is inferred from other params (travelMode)
 * `approchFrom(direction)` `Right`, `Left` and `NoUTurn` controls the `CurbApproach` parameter
 
-## Related Discussion 
-* The semantics of `start()`, `end()`, `finish()`, `via()`, `from()`, `to()`, ect... are being discussed in https://github.com/Esri/esri-leaflet-routing/issues/8
+## Related Discussion
+* The semantics of `start()`, `end()`, `finish()`, `via()`, `from()`, `to()`, etc... are being discussed in https://github.com/Esri/esri-leaflet-routing/issues/8
